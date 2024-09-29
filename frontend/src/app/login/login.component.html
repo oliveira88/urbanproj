@@ -1,0 +1,34 @@
+<mat-card>
+  <mat-card-title>
+    <h3>Login</h3>
+  </mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <input
+            type="text"
+            matInput
+            placeholder="Usuário"
+            formControlName="usuario"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <input
+            type="password"
+            matInput
+            placeholder="Senha"
+            formControlName="senha"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="button">
+        <button type="submit" mat-flat-button>Entrar</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
