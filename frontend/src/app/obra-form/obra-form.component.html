@@ -1,0 +1,97 @@
+<div mat-dialog-title>
+  <h1>Obras formulário</h1>
+</div>
+<form [formGroup]="obraForm" (ngSubmit)="onFormSubmit()">
+  <div mat-dialog-content class="content">
+    <div class="row">
+      @if(data) {
+      <mat-form-field
+        appearance="outline"
+        aria-disabled="true"
+        aria-readonly="true"
+      >
+        <mat-label>ID</mat-label>
+        <input
+          [disabled]="true"
+          [readonly]="true"
+          matInput
+          type="text"
+          formControlName="id"
+        />
+      </mat-form-field>
+      }
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput type="text" formControlName="nome" />
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Descrição</mat-label>
+        <input matInput type="text" formControlName="descricao" />
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Responsável</mat-label>
+        <mat-select formControlName="responsavel">
+          @for (resp of responsaveis$ | async ; track resp) {
+          <mat-option [value]="resp.id">{{ resp.nome }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          @for (s of status$ | async ; track s) {
+          <mat-option [value]="s.id">{{ s.estado }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Bairro</mat-label>
+        <input matInput type="text" formControlName="bairro" />
+      </mat-form-field>
+    </div>
+
+    <div class="row"></div>
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Date de início</mat-label>
+        <input
+          matInput
+          [matDatepicker]="dataInicio"
+          formControlName="dataInicio"
+        />
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="dataInicio"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #dataInicio></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Date de término</mat-label>
+        <input matInput [matDatepicker]="dataFim" formControlName="dataFim" />
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="dataFim"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #dataFim></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </div>
+  <div mat-dialog-actions class="action">
+    <button mat-raised-button type="button" [mat-dialog-close]="false">
+      Cancelar
+    </button>
+    <button mat-raised-button color="primary" type="submit">
+      {{ data ? "Atualizar" : "Salvar" }}
+    </button>
+  </div>
+</form>
