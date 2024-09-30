@@ -18,11 +18,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -53,16 +54,35 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   form: FormGroup;
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private snackbar: MatSnackBar
+  ) {
     this.form = this.fb.group({
-      username: [''],
-      password: [''],
+      usuario: [''],
+      senha: [''],
     });
   }
 
   submit() {
     if (this.form.valid) {
-      this.router.navigate(['/home']);
+      const { usuario, senha } = this.form.value;
+      this.authService.login(usuario, senha).subscribe({
+        next: (res) => {
+          if (res.id) {
+            localStorage.setItem('user', JSON.stringify(res));
+            this.router.navigate(['/home']);
+          }
+        },
+        error: (err) => {
+          this.snackbar.open('Usuário ou senha inválidos', 'Fechar', {
+            duration: 2000,
+            verticalPosition: 'top',
+          });
+        },
+      });
     }
   }
 }

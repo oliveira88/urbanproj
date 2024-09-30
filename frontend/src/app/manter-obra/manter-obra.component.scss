@@ -15,3 +15,12 @@
   display: flex;
   gap: 5px;
 }
+
+.no-permission {
+  height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  h3 {
+    margin: 0 auto;
+  }
+}

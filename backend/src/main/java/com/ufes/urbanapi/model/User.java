@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -25,7 +27,10 @@ public class User {
   private Long id;
 
   private String nome;
+
   private String email;
+
+  @JsonIgnore
   private String senha;
   private LocalDate dataCadastro;
   private Boolean ativo;

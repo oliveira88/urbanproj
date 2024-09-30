@@ -1,3 +1,4 @@
+import { Usuario } from './../model/usuario';
 import { DatePipe, JsonPipe } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +22,7 @@ import { ObraFormComponent } from '../obra-form/obra-form.component';
 import { ObrasService } from '../services/obras.service';
 import { MatRadioModule } from '@angular/material/radio';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-manter-obra',
@@ -72,8 +74,42 @@ export class ManterObraComponent implements OnInit {
   private obrasService = inject(ObrasService);
   private dialogRef = inject(MatDialog);
   private snackbar = inject(MatSnackBar);
+  private router = inject(Router);
+  usuario?: Usuario;
   ngOnInit() {
     this.obterObras();
+    this.usuario = JSON.parse(localStorage.getItem('user') || '{}');
+  }
+
+  get canView() {
+    return this.usuario?.perfis?.some(
+      (perfil) =>
+        ['Gestor'].includes(perfil.nome) &&
+        perfil.permissoes.some((p) => p.nome === 'LER')
+    );
+  }
+
+  get canCreate() {
+    return this.usuario?.perfis?.some(
+      (perfil) =>
+        ['Gestor'].includes(perfil.nome) &&
+        perfil.permissoes.some((p) => p.nome === 'CRIAR')
+    );
+  }
+
+  get canEdit() {
+    return this.usuario?.perfis?.some(
+      (perfil) =>
+        ['Gestor'].includes(perfil.nome) &&
+        perfil.permissoes.some((p) => p.nome === 'ATUALIZAR')
+    );
+  }
+  get canDelete() {
+    return this.usuario?.perfis?.some(
+      (perfil) =>
+        ['Gestor'].includes(perfil.nome) &&
+        perfil.permissoes.some((p) => p.nome === 'DELETAR')
+    );
   }
 
   openEditForm(obj: ProjetoObra) {
@@ -124,9 +160,9 @@ export class ManterObraComponent implements OnInit {
       this.dataSource.sort = this.sort;
     });
   }
-}
-function provideMomentDateAdapter(
-  MY_FORMATS: any
-): import('@angular/core').Provider {
-  throw new Error('Function not implemented.');
+
+  logout() {
+    localStorage.removeItem('user');
+    this.router.navigate(['/'], { replaceUrl: true });
+  }
 }
